@@ -1,3 +1,5 @@
 **/*.js
 aot/**/*.ts
 !rollup-config.js
+
+!systemjs.config.extras.js

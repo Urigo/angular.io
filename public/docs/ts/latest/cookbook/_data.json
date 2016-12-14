@@ -64,5 +64,10 @@
   "visual-studio-2015": {
     "title": "Visual Studio 2015 QuickStart",
     "intro": "Use Visual Studio 2015 with the QuickStart files"
+  },
+
+  "graphql": {
+    "title": "GraphQL",
+    "intro": "Use GraphQL to talk to a remote server"
   }
 }

@@ -26,12 +26,10 @@ include ../_util-fns
     - [Performing a query](#querying)
   
     - [Performing a mutation](#mutation)
-  
-    - [Querying a realtime subscription](#more-observables)
 
-  - [Further resources](#parent-to-child-setter)
+  - [Further resources](#resources)
 
-  - [Appendix: Setting up a GraphQL server](#parent-to-child-setter)
+  - [Appendix: Setting up a GraphQL server](#server)
 
 :marked
   **See the <live-example name="heroes-graphql"></live-example>**.
@@ -198,7 +196,7 @@ code-example(language="sh" class="code-shell").
 +makeExample('heroes-graphql/ts/app/client.2.ts', 'network-initialization')
 .l-sub-section
   :marked
-    If you don't have a GraphQL server running, jump to the section about creating a GraphQL server.
+    If you don't have a GraphQL server running, [jump to the section about creating a GraphQL server](#server).
     In that example we will show you how to run your GraphQL server in-memory on the client, as it is good for testing and also
     a helpful way to gradually move your app to GraphQL.
 
@@ -245,17 +243,13 @@ code-example(language="sh" class="code-shell").
   :marked
     You can look at it as the equivalent of POST request in REST
 :marked
-code-example(language="sh" class="code-shell").
+code-example(language="json").
   mutation {
-    addHero(heroName: "Russel Brand") {
+    addHero(heroName: "Russell Brand") {
       id
       name
     }
   }
-  age="html" format="linenums").
-  format="linenums" language="typescript").
-  format="linenums" language="js").
-  code-example(language="json").
 :marked
   GraphQL mutations consist of two parts:
   1. The mutation name with arguments (`addHero`), which represents the actual operation to be done on the server (just like calling a function)
@@ -263,7 +257,7 @@ code-example(language="sh" class="code-shell").
   decide which fields you will get back, not something that the server will dictate for you
 
   The result of the above mutation might be be:
-code-example(language="json" class="code-shell").  
+code-example(language="json").  
   {
     "data": {
       "addHero": {
@@ -289,5 +283,46 @@ code-example(language="json" class="code-shell").
 
   Also, just like a query, the mutate function returns an Observable we can subscribe to and handle the data we asked for.
   
+.l-main-section
+<a id="resources"></a>
+:marked
+  ## Further resources
+
+  * [GraphQL.org](http://graphql.org/) is a great website, with the following sections:
+    * [Learn](http://graphql.org/learn/)
+    * [Implementations in any language](http://graphql.org/code/)
+    * [Community](http://graphql.org/community/)
+  * [Apollo Developer resources](http://dev.apollodata.com/) - The [team](http://www.apollodata.com/) behind the Angular GraphQL client
+  * [Apollo Dev Blog](https://dev-blog.apollodata.com/) - The most popular GraphQL blog
+
+.l-main-section
+<a id="server"></a>
+:marked
+  ## Appendix: Setting up a GraphQL server
+
+  We are going to show you how to add a GraphQL server in Javascript.
+
+  Like the other examples on angular.io, we are going to run the server in the browser as part of our Angular app,
+  it's good for testing and also if you want to start using GraphQL on your frontend without having a GraphQL backend.
+
+.l-sub-section
+  :marked
+    You can learn how to run a full GraphQL backend on the [Apollo Server docs](http://dev.apollodata.com/tools/).  
+    The good thing is, that because it's Isomorphic Javascript, it is almost identical to the simple server we will run inside our Angular app
+:marked
+  To start, let's create a file called `in-memory-graphql.ts` inside our Angular app.
+
+  First thing we should do is to create our GraphQL schema.
+.l-sub-section
+  :marked
+    The schema is pretty self explanatory, but if you want to dig deeper, check out [GraphQL.org learn section](http://graphql.org/learn/)
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'graphql-schema', 'Heroes GraphQL Schema')
+:marked
+  
+
+
+
+
+
 :marked
   [Back to top](#top)

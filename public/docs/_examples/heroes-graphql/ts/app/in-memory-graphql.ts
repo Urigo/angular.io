@@ -21,6 +21,10 @@ type Mutation {
   updateHero (
     heroId: Int!
   ): Hero
+
+  addHero (
+    heroName: String!
+  ): Hero
 }
 
 # we need to tell the server which types represent the root query
@@ -55,14 +59,23 @@ const resolveFunctions = {
     }
   },
   Mutation: {
-    // updateHero(root: any, params: any) {
-    //   const post = find(posts, { id: params.postId });
-    //   if (!post) {
-    //     throw new Error(`Couldn't find post with id ${params.postId}`);
-    //   }
-    //   post.votes += 1;
-    //   return post;
-    // }
+    updateHero(root: any, params: any) {
+      let hero = find(heroes, { id: params.heroId });
+      if (!hero) {
+        throw new Error(`Couldn't find post with id ${params.heroId}`);
+      }
+      hero = params.heroId;
+      return hero;
+    },
+    addHero(root: any, params: any) {
+      const maxId = Math.max(...heroes.map((hero)=>{return hero.id}));
+      const newHero = {
+        name: params.heroName,
+        id: maxId + 1
+      };
+      heroes.push(newHero);
+      return(newHero);
+    }
   }
 }
 

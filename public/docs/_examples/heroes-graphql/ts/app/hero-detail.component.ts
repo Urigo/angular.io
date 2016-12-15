@@ -12,16 +12,6 @@ import gql from 'graphql-tag';
 import { Hero }        from './hero';
 import { HeroService } from './hero.service';
 
-
-export const heroQuery: any = gql`
-  query Hero($heroId: Int!) {
-    hero(heroId: $heroId) {
-      id
-      name
-    }
-  }
-`;
-
 @Component({
   moduleId: module.id,
   selector: 'my-hero-detail',
@@ -44,68 +34,32 @@ export class HeroDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-
-
-    this.route.params
-      .switchMap((params: Params) => this.heroService.getHero(+params['id']))
-      .subscribe(hero => this.hero = hero);
-
+    // this.route.params
+    //   .switchMap((params: Params) => this.heroService.getHero(+params['id']))
+    //   .subscribe(hero => this.hero = hero);
 
     this.route.params.subscribe(params => {
       const heroId = params['id'];
 
+      // #docregion graphql-query
       this.heroObservable = this.apollo.watchQuery({
-        query: heroQuery,
+        query: gql`
+          query Hero($heroId: Int!) {
+            hero(heroId: $heroId) {
+              id
+              name
+            }
+          }
+        `,
         variables: { heroId: heroId }
       });
 
       this.heroSubscription = this.heroObservable.subscribe(({data, loading}) => {
         this.hero = data.hero;
       });
-
-
-
+      // #enddocregion graphql-query
     });
-
-
   }
-
-    /*
-  ngOnInit(): void {
-    this.route.params
-      .switchMap((params: Params) => this.heroService.getHero(+params['id']))
-      .subscribe(hero => this.hero = hero);
-
-      .switchMap((params: Params) => this.apollo.watchQuery({
-        query: heroQuery,
-        variables: {
-          heroId: params['id']
-        }
-    });
-
-    this.feedSub = this.feedObs.subscribe(({data, loading}) => {
-      console.log(JSON.stringify(data));
-    });
-
-      
-
-    this.route.params.subscribe(params => {
-      const heroId = params['id'];
-
-      this.apollo.watchQuery({
-        query: heroQuery,
-        variables: {
-          heroId: params['id']
-        }
-      }).subscribe({
-        next: (data) => {
-          console.log('data', JSON.stringify(data))
-        }
-      });
-
-    });
-      */
 
   // #docregion save
   save(): void {

@@ -13,10 +13,13 @@ import { HttpModule }    from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 
 // #enddocregion v1
-// Imports for loading & configuring the in-memory web api
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
+
+// #docregion import-apollo
+// ...
 import { ApolloModule } from 'angular2-apollo';
+import { client } from './client';
+// ...
+// #enddocregion import-apollo
 
 // #docregion v1
 import { AppComponent }         from './app.component';
@@ -26,24 +29,24 @@ import { HeroDetailComponent }  from './hero-detail.component';
 import { HeroService }          from './hero.service';
 // #enddocregion v1, v2
 import { HeroSearchComponent }  from './hero-search.component';
-import { client } from './client';
 // #docregion v1, v2
 
+// #docregion apollo-ngmodule
+// ...
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     // #enddocregion v1
-    // #docregion in-mem-web-api
-    InMemoryWebApiModule.forRoot(InMemoryDataService),
-    // #enddocregion in-mem-web-api
     // #docregion v1
     AppRoutingModule,
     ApolloModule.withClient(client)
   ],
   // #docregion search
   declarations: [
+    // ...
+// #enddocregion apollo-ngmodule    
     AppComponent,
     DashboardComponent,
     HeroDetailComponent,

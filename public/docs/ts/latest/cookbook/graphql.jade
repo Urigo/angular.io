@@ -2,7 +2,7 @@ include ../_util-fns
 
 <a id="top"></a>
 :marked
-  GraphQL is a network protocol, a query language for you API and a runtime for fulfilling those queries with your existing data.
+  GraphQL is a network protocol, a query language for your API and a runtime for fulfilling those queries with your existing data.
 
 .l-sub-section
   :marked
@@ -20,12 +20,12 @@ include ../_util-fns
 
   - [The benefits of GraphQL to Angular developers](#benefits-of-graphql)
 
-  - [How to use GraphQL in your Angular app with app demo:](#cors)
-    - [Installation](#search-parameters)
+  - [How to use GraphQL in your Angular app with app demo:](#how-to)
+    - [Installation](#installation)
 
-    - [Performing a query](#more-observables)
+    - [Performing a query](#querying)
   
-    - [Performing a mutation](#more-observables)
+    - [Performing a mutation](#mutation)
   
     - [Querying a realtime subscription](#more-observables)
 
@@ -34,7 +34,7 @@ include ../_util-fns
   - [Appendix: Setting up a GraphQL server](#parent-to-child-setter)
 
 :marked
-  **See the <live-example name="cb-component-communication"></live-example>**.
+  **See the <live-example name="heroes-graphql"></live-example>**.
 
 .l-main-section
 <a id="what-is-graphql"></a>
@@ -65,8 +65,8 @@ include ../_util-fns
 
 .l-sub-section
   :marked
-    You can check out [this](https://www.youtube.com/watch?v=Xx39bv-5ojA&t=1s) talk by Jeff Cross and
-    Uri Goldshtein that summarizes this part
+    You can check out [this](https://www.youtube.com/watch?v=Xx39bv-5ojA&t=1s) talk by [Jeff Cross](https://twitter.com/jeffbcross) and
+    [Uri Goldshtein](https://twitter.com/UriGoldshtein) that summarizes this part
 
 :marked
   ### Component based API
@@ -86,10 +86,8 @@ include ../_util-fns
   
   All those solutions are valid but also has their limitations:
   
-  #### Using HTTP service in Component
-  
-  > Example code
-  
+  #### Using HTTP service in Component  
+
   The problems with that approach:
 
   1. Multiple redundant requests - When we render multiple components, 
@@ -99,8 +97,9 @@ include ../_util-fns
   
   #### Using a service
   
-  > Example code
-  
++makeExample('toh-6/ts/app/hero.service.ts', 'getHero','hero.service.ts (Fetch by Id)')
++makeExample('toh-6/ts/app/hero-detail.component.ts', 'service-fetch-by-id','hero-detail.component.ts (Fetch by Id)')
+:marked
   The problems with that approach:
     
   1. We created a dependency between the service and all of the components that use it - 
@@ -110,20 +109,28 @@ include ../_util-fns
   
   #### Fetch data at the parent component and pass it down the component tree
   
-  > Example code
-  
++makeExample('toh-4/ts/app/hero.ts','','Declare the API type')
++makeExample('toh-4/ts/app/hero-detail.component.ts','declaring-conponent-input','Declare the input')
++makeExample('toh-4/ts/app/app.component.ts','calling-component','Using from parent')
+:marked
   The problems with that approach:
 
-  - When you change the API of a component, you need to change its parent components all the way to the top
+  - When you change the API of a component, you need to change its parent components all the way to the top - 
+  so again we created a dependency, this time with the child component all the way up to the fetching component
+  and all the components in between
   
   #### Solution - Component based API
   
-  > Example code
-
-
-  As you can see, we placed the data dependency next to the component itself and when the data dependency changed,
++makeExample('heroes-graphql/ts/app/hero-detail.component.ts','graphql-query','GraphQL query')
+:marked
+  As you can see, we placed the data dependency inside or next to the component itself and when the data dependency changes,
   the component is the only thing that needed to be changed -
   no service or parent component were harmed in the making of this component.
+
+  So now when we want to change the data dependencies, all changes are contained within the single component:
+
++makeExample('heroes-graphql/ts/app/hero-detail.component.1.ts','graphql-query-new-field','Adding `age` field to component')
++makeExample('heroes-graphql/ts/app/hero-detail.component.1.html','template-new-field','Adding `age` field to template')  
 
   ### Network Performance
   
@@ -154,6 +161,87 @@ include ../_util-fns
 
 
   IDE GIF
+
+  
+.l-main-section
+<a id="how-to"></a>
+:marked
+  ## How to use GraphQL in your Angular app
+
+  We will use [Apollo-Client](http://dev.apollodata.com/) as our GraphQL client for Angular.  
+  Apollo does more then simply querying GraphQL and also gives us the benefits we talked before like distributing
+  queries to Angular components. 
+
+.l-sub-section
+  :marked
+    This will be a quick start guide, the full documentation can be found on the [Apollo Client docs website](http://dev.apollodata.com/)
+
+.l-main-section
+<a id="installation"></a>
+:marked
+  ## Installation
+
+  First, let's install Apollo-Client and the integration libraries from npm:
+
+code-example(language="sh" class="code-shell").
+    npm install apollo-client apollo-angular graphql-tag --save
+:marked
+  Now let's initialize our client.
+
+  Create a new file called `client.ts` and place the following code:
++makeExample('heroes-graphql/ts/app/client.1.ts')
+:marked
+  This is the default initialization of Apollo and will call the `/graphql` endpoint.
+
+  In order to change the [settings](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor) of Apollo client,
+  we will call it's constructor with different parameters, for example in order to change the endpoint we will do something like that:
++makeExample('heroes-graphql/ts/app/client.2.ts', 'network-initialization')
+.l-sub-section
+  :marked
+    If you don't have a GraphQL server running, jump to the section about creating a GraphQL server.
+    In that example we will show you how to run your GraphQL server in-memory on the client, as it is good for testing and also
+    a helpful way to gradually move your app to GraphQL.
+
+:marked
+  Once we've finished initializing our Apollo-Client, we would want to add the Apollo module to our app's NgNodules with our configurations:
++makeExample('heroes-graphql/ts/app/app.module.ts', 'import-apollo', 'app.module.ts (npm imports)')
++makeExample('heroes-graphql/ts/app/app.module.ts', 'apollo-ngmodule', 'app.module.ts (NgModule)')
+
+.l-main-section
+<a id="querying"></a>
+:marked
+  ## Performing a query
+
+  In GraphQL we always query a server which has a schema representing the data it exposes.
+  Our server is built based on the Heroes tutorial and here is the schema:
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'graphql-schema', 'Heroes GraphQL Schema')
+:marked
+  So let's start by adding Apollo into our Component, let's import it and inject with in the constructor:
++makeExample('heroes-graphql/ts/app/dashboard.component.ts', 'import-apollo', 'dashboard.component.ts')
++makeExample('heroes-graphql/ts/app/dashboard.component.ts', 'inject-apollo', 'dashboard.component.ts')
+:marked
+  To query data with Apollo Client we just need to pass Apollo a query in the GraphQL query syntax, explained [here](http://graphql.org/learn/queries/).
+
+  In order to parse regular string literals as GraphQL, we will use the `gql` function from the `graphql-tag` library:
++makeExample('heroes-graphql/ts/app/dashboard.component.ts', 'import-graphql-tag', 'dashboard.component.ts')
+:marked
+  Now let's query:
++makeExample('heroes-graphql/ts/app/dashboard.component.ts', 'query-heroes', 'dashboard.component.ts')
+:marked
+  and render:
++makeExample('heroes-graphql/ts/app/dashboard.component.html', 'render-heroes', 'dashboard.component.html')
+
+
+.l-main-section
+<a id="mutation"></a>
+:marked
+  ## Performing a mutation
+
+  Mutation means 
+
+
+
+
 
 
 

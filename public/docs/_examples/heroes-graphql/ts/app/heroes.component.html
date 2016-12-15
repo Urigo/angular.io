@@ -10,6 +10,7 @@
 <!-- #enddocregion add -->
 <ul class="heroes">
   <!-- #docregion li-element -->
+  <!-- #docregion render-heroes -->
   <li *ngFor="let hero of heroes" (click)="onSelect(hero)"
       [class.selected]="hero === selectedHero">
     <span class="badge">{{hero.id}}</span>
@@ -19,6 +20,7 @@
       (click)="delete(hero); $event.stopPropagation()">x</button>
     <!-- #enddocregion delete -->
   </li>
+  <!-- #enddocregion render-heroes -->
   <!-- #enddocregion li-element -->
 </ul>
 <div *ngIf="selectedHero">

@@ -2,8 +2,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
 
-import { Hero }                from './hero';
-import { HeroService }         from './hero.service';
+// #docregion import-apollo
+//..
+import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
+//..
+// #enddocregion import-apollo
+// #docregion import-graphql-tag
+//..
+import gql from 'graphql-tag';
+//..
+// #enddocregion import-graphql-tag
+import { ApolloQueryResult } from 'apollo-client';
+import { Hero }              from './hero';
 
 @Component({
   moduleId: module.id,
@@ -12,39 +22,71 @@ import { HeroService }         from './hero.service';
   styleUrls: [ 'heroes.component.css' ]
 })
 export class HeroesComponent implements OnInit {
+  // #docregion this-heroes
   heroes: Hero[];
   selectedHero: Hero;
+  // #enddocregion this-heroes
 
+// #docregion inject-apollo
   constructor(
-    private heroService: HeroService,
+    private apollo: Angular2Apollo,
     private router: Router) { }
+  // #enddocregion inject-apollo  
 
+  // #docregion query-heroes
   getHeroes(): void {
-    this.heroService
-        .getHeroes()
-        .then(heroes => this.heroes = heroes);
+    this.apollo.watchQuery({
+      query: gql`
+        query allHeroes {
+          heroes {
+            id
+            name
+          }
+        }
+      `,
+    }).subscribe((queryResult: ApolloQueryResult) => {
+      this.heroes = queryResult.data.heroes;
+    });
+    // #enddocregion query-heroes
   }
 
   // #docregion add
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
-    this.heroService.create(name)
-      .then(hero => {
-        this.heroes.push(hero);
-        this.selectedHero = null;
+
+    // #docregion add-mutation
+    this.apollo.mutate({
+      mutation: gql`
+        mutation addHero($heroName: String!) {
+          addHero(heroName: $heroName) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        heroName: name
+      }
+    }).subscribe((mutationResult: ApolloQueryResult) => {
+      this.heroes.push({
+        id: mutationResult.data.addHero.id,
+        name: mutationResult.data.addHero.name
       });
+      this.selectedHero = null;
+    });
+    // #enddocregion add-mutation
   }
   // #enddocregion add
 
   // #docregion delete
   delete(hero: Hero): void {
-    this.heroService
-        .delete(hero.id)
-        .then(() => {
-          this.heroes = this.heroes.filter(h => h !== hero);
-          if (this.selectedHero === hero) { this.selectedHero = null; }
-        });
+    // this.heroService
+    //     .delete(hero.id)
+    //     .then(() => {
+    //       this.heroes = this.heroes.filter(h => h !== hero);
+    //       if (this.selectedHero === hero) { this.selectedHero = null; }
+    //     });
   }
   // #enddocregion delete
 

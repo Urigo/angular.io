@@ -1,8 +1,18 @@
 // #docregion , search
 import { Component, OnInit } from '@angular/core';
 
+// #docregion import-apollo
+//..
 import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
+//..
+// #enddocregion import-apollo
+// #docregion import-graphql-tag
+//..
 import gql from 'graphql-tag';
+//..
+// #enddocregion import-graphql-tag
+import { ApolloQueryResult } from 'apollo-client';
+import { Hero }              from './hero';
 
 @Component({
   moduleId: module.id,
@@ -12,13 +22,19 @@ import gql from 'graphql-tag';
 })
 // #enddocregion search
 export class DashboardComponent implements OnInit {
-  heroes: ApolloQueryObservable<any>;
+  // #docregion this-heroes
+  heroes: Hero[];
+  // #enddocregion this-heroes
   
+  // #docregion inject-apollo
+  //..
   constructor(private apollo: Angular2Apollo) { }
+  //..
+  // #enddocregion inject-apollo
 
+  // #docregion query-heroes
   ngOnInit(): void {
-
-    this.heroes = this.apollo.watchQuery({
+    this.apollo.watchQuery({
       query: gql`
         query allHeroes {
           heroes {
@@ -27,7 +43,10 @@ export class DashboardComponent implements OnInit {
           }
         }
       `,
+    }).subscribe((queryResult: ApolloQueryResult) => {
+      this.heroes = queryResult.data.heroes;
     });
-
   }
+  // #enddocregion query-heroes
 }
+// #enddocregion

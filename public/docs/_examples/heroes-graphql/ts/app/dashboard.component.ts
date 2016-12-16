@@ -43,8 +43,9 @@ export class DashboardComponent implements OnInit {
           }
         }
       `,
+      forceFetch: true
     }).subscribe((queryResult: ApolloQueryResult) => {
-      this.heroes = queryResult.data.heroes;
+      this.heroes = queryResult.data.heroes.slice(1, 5)
     });
   }
   // #enddocregion query-heroes

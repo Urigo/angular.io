@@ -1,7 +1,13 @@
 // #docregion
+// #docregion import-lodash
 import { find, filter } from 'lodash';
+// #enddocregion import-lodash
+// #docregion import-graphql-tools
 import { makeExecutableSchema } from 'graphql-tools';
-
+// #enddocregion import-graphql-tools
+// #docregion import-graphql
+import { execute } from 'graphql';
+// #enddocregion import-graphql
 // #docregion graphql-schema
 const typeDefinitions = `
 type Hero {
@@ -35,7 +41,7 @@ schema {
 }
 `;
 // #enddocregion graphql-schema
-
+// #docregion heroes-array
 const heroes = [
   {id: 11, name: 'Mr. Nice'},
   {id: 12, name: 'Narco'},
@@ -48,29 +54,31 @@ const heroes = [
   {id: 19, name: 'Magma'},
   {id: 20, name: 'Tornado'}
 ];
+// #enddocregion heroes-array
 
+// #docregion resolvers
 const resolveFunctions = {
   Query: {
     heroes() {
       return heroes;
     },
-    hero(obj: any, params: any, context: any) {
-      return find(heroes, { id: params.heroId });
+    hero(obj: any, args: any, context: any) {
+      return find(heroes, { id: args.heroId });
     }
   },
   Mutation: {
-    updateHero(root: any, params: any) {
-      let hero = find(heroes, { id: params.heroId });
+    updateHero(root: any, args: any) {
+      let hero = find(heroes, { id: args.heroId });
       if (!hero) {
-        throw new Error(`Couldn't find post with id ${params.heroId}`);
+        throw new Error(`Couldn't find post with id ${args.heroId}`);
       }
-      hero = params.heroId;
+      hero = args.heroId;
       return hero;
     },
-    addHero(root: any, params: any) {
+    addHero(root: any, args: any) {
       const maxId = Math.max(...heroes.map((hero)=>{return hero.id}));
       const newHero = {
-        name: params.heroName,
+        name: args.heroName,
         id: maxId + 1
       };
       heroes.push(newHero);
@@ -78,15 +86,14 @@ const resolveFunctions = {
     }
   }
 }
-
+// #enddocregion resolvers
+// #docregion make-executable-schema
 const schema = makeExecutableSchema({
   typeDefs: typeDefinitions,
   resolvers: resolveFunctions,
 });
-
-// in-browser-network-interface.js
-import { execute } from 'graphql';
-
+// #enddocregion make-executable-schema
+// #docregion execute-and-export
 class InBrowserNetworkInterface {
   schema: any = {};
   constructor(params: any) {
@@ -105,4 +112,5 @@ class InBrowserNetworkInterface {
 }
 
 export const networkInterface = new InBrowserNetworkInterface({ schema });
+// #enddocregion execute-and-export
 // #enddocregion

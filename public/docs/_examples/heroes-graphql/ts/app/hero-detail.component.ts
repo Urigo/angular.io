@@ -11,6 +11,7 @@ import gql from 'graphql-tag';
 
 import { Hero }        from './hero';
 import { HeroService } from './hero.service';
+import { ApolloQueryResult } from 'apollo-client';
 
 @Component({
   moduleId: module.id,
@@ -63,8 +64,23 @@ export class HeroDetailComponent implements OnInit {
 
   // #docregion save
   save(): void {
-    this.heroService.update(this.hero)
-      .then(() => this.goBack());
+
+    this.apollo.mutate({
+      mutation: gql`
+        mutation updateHero($id: Int!, $name: String!) {
+          updateHero(id: $id, name: $name) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        id: this.hero.id,
+        name: this.hero.name
+      }
+    }).subscribe((mutationResult: ApolloQueryResult) => {
+      this.goBack();
+    });
   }
   // #enddocregion save
 

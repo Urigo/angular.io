@@ -5,26 +5,27 @@ import { Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 
-import { HeroSearchService } from './hero-search.service';
 import { Hero } from './hero';
+
+import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
+import gql from 'graphql-tag';
 
 @Component({
   moduleId: module.id,
   selector: 'hero-search',
   templateUrl: 'hero-search.component.html',
-  styleUrls: [ 'hero-search.component.css' ],
-  providers: [HeroSearchService]
+  styleUrls: [ 'hero-search.component.css' ]
 })
 export class HeroSearchComponent implements OnInit {
   // #docregion search
-  heroes: Observable<Hero[]>;
+  heroes: ApolloQueryObservable<any>;
   // #enddocregion search
   // #docregion searchTerms
   private searchTerms = new Subject<string>();
   // #enddocregion searchTerms
 
   constructor(
-    private heroSearchService: HeroSearchService,
+    private apollo: Angular2Apollo,
     private router: Router) {}
   // #docregion searchTerms
 
@@ -36,19 +37,23 @@ export class HeroSearchComponent implements OnInit {
   // #docregion search
 
   ngOnInit(): void {
-    this.heroes = this.searchTerms
-      .debounceTime(300)        // wait for 300ms pause in events
-      .distinctUntilChanged()   // ignore if next search term is same as previous
-      .switchMap(term => term   // switch to new observable each time
-        // return the http search observable
-        ? this.heroSearchService.search(term)
-        // or the observable of empty heroes if no search term
-        : Observable.of<Hero[]>([]))
-      .catch(error => {
-        // TODO: real error handling
-        console.log(error);
-        return Observable.of<Hero[]>([]);
-      });
+
+    this.heroes = this.apollo.watchQuery({
+      query: gql`
+        query searchHeroes ($search: String) {
+          heroes (search: $search) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        search: this.searchTerms
+          .debounceTime(300)        // wait for 300ms pause in events
+          .distinctUntilChanged()   // ignore if next search term is same as previous
+      },
+      forceFetch: true
+    })
   }
   // #enddocregion search
 

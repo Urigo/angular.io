@@ -12,12 +12,12 @@ import { execute } from 'graphql';
 const typeDefinitions = `
 type Hero {
   id: Int!
-  name: String
+  name: String!
 }
 
 # the schema allows the following query:
 type Query {
-  heroes: [Hero]
+  heroes(search: String): [Hero]
 
   hero(heroId: Int!): Hero
 }
@@ -25,11 +25,16 @@ type Query {
 # this schema allows the following mutation:
 type Mutation {
   updateHero (
-    heroId: Int!
+    id: Int!
+    name: String!
   ): Hero
 
   addHero (
     heroName: String!
+  ): Hero
+
+  deleteHero (
+    id: Int!
   ): Hero
 }
 
@@ -42,7 +47,7 @@ schema {
 `;
 // #enddocregion graphql-schema
 // #docregion heroes-array
-const heroes = [
+let heroes = [
   {id: 11, name: 'Mr. Nice'},
   {id: 12, name: 'Narco'},
   {id: 13, name: 'Bombasto'},
@@ -59,8 +64,14 @@ const heroes = [
 // #docregion resolvers
 const resolveFunctions = {
   Query: {
-    heroes() {
-      return heroes;
+    heroes(obj: any, args: any) {
+      if (args.search) {
+        return heroes.filter(function (currentHero) { 
+          return currentHero.name.search(args.search) != -1; 
+        });
+      } else {
+        return heroes;
+      }
     },
     hero(obj: any, args: any, context: any) {
       return find(heroes, { id: args.heroId });
@@ -68,11 +79,11 @@ const resolveFunctions = {
   },
   Mutation: {
     updateHero(root: any, args: any) {
-      let hero = find(heroes, { id: args.heroId });
+      let hero = find(heroes, { id: args.id });
       if (!hero) {
-        throw new Error(`Couldn't find post with id ${args.heroId}`);
+        throw new Error(`Couldn't find post with id ${args.id}`);
       }
-      hero = args.heroId;
+      hero.name = args.name;
       return hero;
     },
     addHero(root: any, args: any) {
@@ -82,8 +93,19 @@ const resolveFunctions = {
         id: maxId + 1
       };
       heroes.push(newHero);
-      return(newHero);
-    }
+      return newHero;
+    },
+    deleteHero(root: any, args: any) {
+      console.log('args', args);
+      let hero = find(heroes, { id: args.id });
+      console.log('deleted hero start', hero);
+      if (!hero) {
+        throw new Error(`Couldn't find post with id ${args.id}`);
+      }
+      heroes = heroes.filter(function (currentHero) { return currentHero.id != args.id; });
+      console.log('deleted hero', hero);
+      return hero;
+    },
   }
 }
 // #enddocregion resolvers

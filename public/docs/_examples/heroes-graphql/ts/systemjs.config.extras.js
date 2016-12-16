@@ -63,7 +63,7 @@ System.config({
       
     'apollo-client':              { main: './index.js', defaultExtension: 'js' },
     'apollo-client-rxjs':         { main: './build/src/index.js', defaultExtension: 'js' },
-    'apollo-angular-test':        { main: './build/bundles/apollo.umd.js', defaultExtension: 'js' },
+    'apollo-angular':             { main: './build/bundles/apollo.umd.js', defaultExtension: 'js' },
 
     'whatwg-fetch':               { main: './fetch.js', defaultExtension: 'js' },
     'redux':                      { format: 'cjs', defaultExtension: 'js' },

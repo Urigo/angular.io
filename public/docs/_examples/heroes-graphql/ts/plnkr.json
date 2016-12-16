@@ -1,10 +1,10 @@
 {
-  "description": "Tour of Heroes: Part 6",
+  "description": "Tour of Heroes: GraphQL",
   "files":[
     "!**/*.d.ts",
     "!**/*.js",
     "!**/*.[1,2].*",
     "systemjs.config.extras.js"
   ],
-  "tags": ["tutorial", "tour", "heroes", "http"]
+  "tags": ["tutorial", "tour", "heroes", "http", "GraphQL"]
 }

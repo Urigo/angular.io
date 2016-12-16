@@ -5,7 +5,7 @@ System.config({
   map: {
     'apollo-client':                      'npm:apollo-client',
     'apollo-client-rxjs':                 'npm:apollo-client-rxjs',
-    'angular2-apollo':                    'npm:angular2-apollo',
+    'apollo-angular-test':                'npm:apollo-angular-test',
 
     'graphql':                            'npm:graphql',
     'whatwg-fetch':                       'npm:whatwg-fetch',
@@ -63,7 +63,7 @@ System.config({
       
     'apollo-client':              { main: './index.js', defaultExtension: 'js' },
     'apollo-client-rxjs':         { main: './build/src/index.js', defaultExtension: 'js' },
-    'angular2-apollo':            { main: './build/src/index.js', defaultExtension: 'js' },
+    'apollo-angular-test':        { main: './build/bundles/apollo.umd.js', defaultExtension: 'js' },
 
     'whatwg-fetch':               { main: './fetch.js', defaultExtension: 'js' },
     'redux':                      { format: 'cjs', defaultExtension: 'js' },
@@ -81,7 +81,11 @@ System.config({
         './utilities': './utilities/index.js'
       }, 
     },
-    'graphql-tools':              { main: '/dist/index.js', defaultExtension: 'js' },
+    'graphql-tools':              { 
+      main: '/dist/index.js', 
+      defaultExtension: 'js',
+      map: { uuid: '@empty' } 
+    },
     'graphql-anywhere':           { main: '/lib/src/index.js', defaultExtension: 'js' },
 
     'deprecated-decorator':       { main: '/bld/index.js', defaultExtension: 'js' },

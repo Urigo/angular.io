@@ -26,7 +26,6 @@ import { AppComponent }         from './app.component';
 import { DashboardComponent }   from './dashboard.component';
 import { HeroesComponent }      from './heroes.component';
 import { HeroDetailComponent }  from './hero-detail.component';
-import { HeroService }          from './hero.service';
 // #enddocregion v1, v2
 import { HeroSearchComponent }  from './hero-search.component';
 // #docregion v1, v2
@@ -56,7 +55,6 @@ import { HeroSearchComponent }  from './hero-search.component';
   // #docregion v1, v2
   ],
   // #enddocregion search
-  providers: [ HeroService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

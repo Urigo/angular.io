@@ -10,7 +10,6 @@ import {Subject} from 'rxjs/Subject';
 import gql from 'graphql-tag';
 
 import { Hero }        from './hero';
-import { HeroService } from './hero.service';
 
 @Component({
   moduleId: module.id,
@@ -27,17 +26,12 @@ export class HeroDetailComponent implements OnInit {
   private heroObservable: ApolloQueryObservable<any>;
 
   constructor(
-    private heroService: HeroService,
     private route: ActivatedRoute,
     private location: Location,
     private apollo: Angular2Apollo
   ) {}
 
   ngOnInit(): void {
-    // this.route.params
-    //   .switchMap((params: Params) => this.heroService.getHero(+params['id']))
-    //   .subscribe(hero => this.hero = hero);
-
     this.route.params.subscribe(params => {
       const heroId = params['id'];
 
@@ -64,8 +58,6 @@ export class HeroDetailComponent implements OnInit {
 
   // #docregion save
   save(): void {
-    this.heroService.update(this.hero)
-      .then(() => this.goBack());
   }
   // #enddocregion save
 

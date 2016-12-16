@@ -3,7 +3,7 @@
 import { browser, element, by, ElementFinder, ElementArrayFinder } from 'protractor';
 import { promise } from 'selenium-webdriver';
 
-const expectedH1 = 'Tour of Heroes';
+const expectedH1 = 'Tour of Heroes - GraphQL';
 const expectedTitle = `Angular ${expectedH1}`;
 const targetHero = { id: 15, name: 'Magneta' };
 const targetHeroDashboardIndex = 3;

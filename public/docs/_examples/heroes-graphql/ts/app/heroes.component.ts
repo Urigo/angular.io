@@ -44,6 +44,7 @@ export class HeroesComponent implements OnInit {
           }
         }
       `,
+      forceFetch: true
     }).subscribe((queryResult: ApolloQueryResult) => {
       this.heroes = queryResult.data.heroes;
     });
@@ -81,12 +82,23 @@ export class HeroesComponent implements OnInit {
 
   // #docregion delete
   delete(hero: Hero): void {
-    // this.heroService
-    //     .delete(hero.id)
-    //     .then(() => {
-    //       this.heroes = this.heroes.filter(h => h !== hero);
-    //       if (this.selectedHero === hero) { this.selectedHero = null; }
-    //     });
+
+    this.apollo.mutate({
+      mutation: gql`
+        mutation deleteHero($id: Int!) {
+          deleteHero(id: $id) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        id: hero.id
+      }
+    }).subscribe((mutationResult: ApolloQueryResult) => {
+      this.heroes = this.heroes.filter(h => h !== hero);
+      if (this.selectedHero === hero) { this.selectedHero = null; }
+    });
   }
   // #enddocregion delete
 

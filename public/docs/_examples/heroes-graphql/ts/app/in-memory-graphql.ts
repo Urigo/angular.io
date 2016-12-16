@@ -67,7 +67,7 @@ const resolveFunctions = {
     heroes(obj: any, args: any) {
       if (args.search) {
         return heroes.filter(function (currentHero) { 
-          return currentHero.name.search(args.search) != -1; 
+          return currentHero.name.toLowerCase().search(args.search.toLowerCase()) != -1; 
         });
       } else {
         return heroes;
@@ -133,6 +133,9 @@ class InBrowserNetworkInterface {
   }
 }
 
-export const networkInterface = new InBrowserNetworkInterface({ schema });
+const networkInterface = new InBrowserNetworkInterface({ schema });
+export {
+  networkInterface
+}
 // #enddocregion execute-and-export
 // #enddocregion

@@ -43,7 +43,7 @@ class Hero {
   }
 }
 
-describe('Tutorial part 6', () => {
+describe('Heroes GraphQL', () => {
 
   beforeAll(() => browser.get(''));
 

@@ -2,14 +2,10 @@
 import { Component, OnInit } from '@angular/core';
 
 // #docregion import-apollo
-//..
-import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
-//..
+import { Angular2Apollo } from 'apollo-angular';
 // #enddocregion import-apollo
 // #docregion import-graphql-tag
-//..
 import gql from 'graphql-tag';
-//..
 // #enddocregion import-graphql-tag
 import { ApolloQueryResult } from 'apollo-client';
 import { Hero }              from './hero';
@@ -25,11 +21,8 @@ export class DashboardComponent implements OnInit {
   // #docregion this-heroes
   heroes: Hero[];
   // #enddocregion this-heroes
-  
   // #docregion inject-apollo
-  //..
   constructor(private apollo: Angular2Apollo) { }
-  //..
   // #enddocregion inject-apollo
 
   // #docregion query-heroes
@@ -45,7 +38,7 @@ export class DashboardComponent implements OnInit {
       `,
       forceFetch: true
     }).subscribe((queryResult: ApolloQueryResult) => {
-      this.heroes = queryResult.data.heroes.slice(1, 5)
+      this.heroes = queryResult.data.heroes.slice(1, 5);
     });
   }
   // #enddocregion query-heroes

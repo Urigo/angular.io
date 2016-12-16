@@ -16,7 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 // #docregion import-apollo
 // ...
-import { ApolloModule } from 'angular2-apollo';
+import { ApolloModule } from 'apollo-angular';
 import { client } from './client';
 // ...
 // #enddocregion import-apollo

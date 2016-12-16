@@ -3,14 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
 
 // #docregion import-apollo
-//..
-import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
-//..
+import { Angular2Apollo } from 'apollo-angular';
 // #enddocregion import-apollo
 // #docregion import-graphql-tag
-//..
 import gql from 'graphql-tag';
-//..
 // #enddocregion import-graphql-tag
 import { ApolloQueryResult } from 'apollo-client';
 import { Hero }              from './hero';

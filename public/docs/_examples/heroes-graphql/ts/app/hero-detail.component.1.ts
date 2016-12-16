@@ -1,12 +1,10 @@
 // #docregion
-import 'rxjs/add/operator/switchMap';
 import { Component, OnInit }      from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location }               from '@angular/common';
 
-import {Angular2Apollo, ApolloQueryObservable} from 'angular2-apollo';
-import {Subscription} from 'rxjs/Subscription';
-import {Subject} from 'rxjs/Subject';
+import { Angular2Apollo, ApolloQueryObservable } from 'apollo-angular';
+import { Subscription } from 'rxjs/Subscription';
 import gql from 'graphql-tag';
 
 import { Hero }        from './hero';
@@ -19,8 +17,6 @@ import { Hero }        from './hero';
 })
 export class HeroDetailComponent implements OnInit {
   hero: Hero;
-
-  private heroId: Subject<string> = new Subject<string>();
 
   private heroSubscription: Subscription;
   private heroObservable: ApolloQueryObservable<any>;
@@ -50,7 +46,7 @@ export class HeroDetailComponent implements OnInit {
       });
       // #enddocregion graphql-query-new-field
 
-      this.heroSubscription = this.heroObservable.subscribe(({data, loading}) => {
+      this.heroSubscription = this.heroObservable.subscribe(({data}) => {
         this.hero = data.hero;
       });
     });

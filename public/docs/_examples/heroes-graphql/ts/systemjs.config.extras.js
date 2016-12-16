@@ -5,7 +5,7 @@ System.config({
   map: {
     'apollo-client':                      'npm:apollo-client',
     'apollo-client-rxjs':                 'npm:apollo-client-rxjs',
-    'apollo-angular-test':                'npm:apollo-angular-test',
+    'apollo-angular':                     'npm:apollo-angular',
 
     'graphql':                            'npm:graphql',
     'whatwg-fetch':                       'npm:whatwg-fetch',

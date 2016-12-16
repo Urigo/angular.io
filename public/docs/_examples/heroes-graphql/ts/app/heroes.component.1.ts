@@ -3,14 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
 
 // #docregion import-apollo
-//..
-import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
-//..
+import { Angular2Apollo } from 'apollo-angular';
 // #enddocregion import-apollo
 // #docregion import-graphql-tag
-//..
 import gql from 'graphql-tag';
-//..
 // #enddocregion import-graphql-tag
 import { ApolloQueryResult } from 'apollo-client';
 import { Hero }              from './hero';
@@ -57,12 +53,6 @@ export class HeroesComponent implements OnInit {
 
   // #docregion delete
   delete(hero: Hero): void {
-    // this.heroService
-    //     .delete(hero.id)
-    //     .then(() => {
-    //       this.heroes = this.heroes.filter(h => h !== hero);
-    //       if (this.selectedHero === hero) { this.selectedHero = null; }
-    //     });
   }
   // #enddocregion delete
 

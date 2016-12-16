@@ -1,6 +1,6 @@
 // #docregion
 // #docregion import-lodash
-import { find, filter } from 'lodash';
+import { find } from 'lodash';
 // #enddocregion import-lodash
 // #docregion import-graphql-tools
 import { makeExecutableSchema } from 'graphql-tools';
@@ -66,8 +66,8 @@ const resolveFunctions = {
   Query: {
     heroes(obj: any, args: any) {
       if (args.search) {
-        return heroes.filter(function (currentHero) { 
-          return currentHero.name.toLowerCase().search(args.search.toLowerCase()) != -1; 
+        return heroes.filter(function (currentHero){
+          return currentHero.name.toLowerCase().search(args.search.toLowerCase()) !== -1;
         });
       } else {
         return heroes;
@@ -87,7 +87,7 @@ const resolveFunctions = {
       return hero;
     },
     addHero(root: any, args: any) {
-      const maxId = Math.max(...heroes.map((hero)=>{return hero.id}));
+      const maxId = Math.max(...heroes.map((hero) => {return hero.id; }));
       const newHero = {
         name: args.heroName,
         id: maxId + 1
@@ -96,18 +96,15 @@ const resolveFunctions = {
       return newHero;
     },
     deleteHero(root: any, args: any) {
-      console.log('args', args);
       let hero = find(heroes, { id: args.id });
-      console.log('deleted hero start', hero);
       if (!hero) {
         throw new Error(`Couldn't find post with id ${args.id}`);
       }
-      heroes = heroes.filter(function (currentHero) { return currentHero.id != args.id; });
-      console.log('deleted hero', hero);
+      heroes = heroes.filter(function (currentHero) { return currentHero.id !== args.id; });
       return hero;
     },
   }
-}
+};
 // #enddocregion resolvers
 // #docregion make-executable-schema
 const schema = makeExecutableSchema({

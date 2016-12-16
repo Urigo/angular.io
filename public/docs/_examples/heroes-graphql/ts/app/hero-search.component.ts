@@ -2,12 +2,11 @@
 // #docregion
 import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
-import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 
 import { Hero } from './hero';
 
-import { Angular2Apollo, ApolloQueryObservable } from 'angular2-apollo';
+import { Angular2Apollo, ApolloQueryObservable } from 'apollo-angular';
 import gql from 'graphql-tag';
 
 @Component({
@@ -53,7 +52,7 @@ export class HeroSearchComponent implements OnInit {
           .distinctUntilChanged()   // ignore if next search term is same as previous
       },
       forceFetch: true
-    })
+    });
   }
   // #enddocregion search
 

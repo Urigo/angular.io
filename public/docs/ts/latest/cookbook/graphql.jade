@@ -31,6 +31,8 @@ include ../_util-fns
 
   - [Appendix: Setting up a GraphQL server](#server)
 
+  - [Full Example](#example)
+
 :marked
   **See the <live-example name="heroes-graphql"></live-example>**.
 
@@ -288,12 +290,20 @@ code-example(language="json").
 :marked
   ## Further resources
 
-  * [GraphQL.org](http://graphql.org/) is a great website, with the following sections:
+  * [GraphQL.org](http://graphql.org/) is a great website, with the following sections 
+  (by the way, all the examples on the website are runing live, try to edit them in the browser while you reading it):
     * [Learn](http://graphql.org/learn/)
     * [Implementations in any language](http://graphql.org/code/)
     * [Community](http://graphql.org/community/)
-  * [Apollo Developer resources](http://dev.apollodata.com/) - The [team](http://www.apollodata.com/) behind the Angular GraphQL client
+  * [Apollo Developer resources](http://dev.apollodata.com/) - The [team](http://www.apollodata.com/) behind the Angular GraphQL client, 
+  there you will find a more advanced resources about:
+    * [Handling updates from the server and managing the local store](http://dev.apollodata.com/angular2/receiving-updates.html)
+    * [Authentication](http://dev.apollodata.com/angular2/auth.html)
+    * [Pagination](http://dev.apollodata.com/angular2/pagination.html)
+    * [Server-side rendering](http://dev.apollodata.com/angular2/server-side-rendering.html)
+    * and more..
   * [Apollo Dev Blog](https://dev-blog.apollodata.com/) - The most popular GraphQL blog
+  * [Apollo Client Developer Tools](https://dev-blog.apollodata.com/apollo-client-developer-tools-ff89181ebcf#.n5f3fhbg2) - GraphQL debugging tools for Apollo Client in the Chrome developer console
 
 .l-main-section
 <a id="server"></a>
@@ -309,20 +319,112 @@ code-example(language="json").
   :marked
     You can learn how to run a full GraphQL backend on the [Apollo Server docs](http://dev.apollodata.com/tools/).  
     The good thing is, that because it's Isomorphic Javascript, it is almost identical to the simple server we will run inside our Angular app
+    so everything we'll learn now will be the same when you would want to move to write a GraphQL backend.
+
+    Also, there are few GraphQL based Backend-as-a-service platforms out there, like Firebase but based on GraphQL API, to help get
+    started really fast - https://www.scaphold.io/ https://www.graph.cool/ 
 :marked
   To start, let's create a file called `in-memory-graphql.ts` inside our Angular app.
 
   First thing we should do is to create our GraphQL schema.
+
+  For that we will use the `graphql-tools` library that let's us write a GraphQL schema as a string and make it executable:
+code-example(language="sh" class="code-shell").
+    npm install graphql-tools --save  
+:marked
+  Now for the schema itself:    
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'graphql-schema', 'Heroes GraphQL Schema')
 .l-sub-section
   :marked
-    The schema is pretty self explanatory, but if you want to dig deeper, check out [GraphQL.org learn section](http://graphql.org/learn/)
-+makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'graphql-schema', 'Heroes GraphQL Schema')
+    The schema is pretty self explanatory, but if you want to dig deeper, check out [GraphQL.org `learn` section](http://graphql.org/learn/)
 :marked
+  Next let's create our in-memory data:  
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'heroes-array', 'Heroes Array')
+:marked
+  Now we need to write a server that will resolve the queries that we will get from the client based on the schema.
   
+  The GraphQL server consists of resolver functions that correspond to the types of the schema.
+.l-sub-section
+  :marked
+    For the full explanation about how GraphQL resolvers work check out the [execution section](http://graphql.org/learn/execution/) of GraphQL.org 
+:marked
+  Let's create our resolvers:
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'resolvers', 'Resolvers')
+:marked
+  We also used some functions from `lodash` so don't forget to install them from npm and import them:
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'import-lodash', 'Importing lodash')
+:marked
+  As you can see, we created functions that correspond to each type of our schema and also to the mutations.
 
+  This mechanism makes writing simple GraphQL servers very easy, you simply think about how to resolve a specific type of data,
+  separates the frontend logic from the backend, removing the coupling between frontend and backend.
 
+.l-sub-section
+  :marked
+    Also in case you don't have the option to run GraphQL on the server, it's much easier to handle multiple REST requests and join logic on the client using these tools
+:marked
+  Now we need to connect the shema to the resolvers with the `makeExecutableSchema` function from 
+  the [graphql-tools](http://dev.apollodata.com/tools/graphql-tools/index.html) library:
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'import-graphql-tools', 'importing graphql-tools')
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'make-executable-schema', 'makeExecutableSchema')
+:marked
+  Now that we have executable schema, let's execute it using the `graphql` library and export it so we can use it in our Apollo Client:
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'import-graphql', 'Dont forget to npm install')
++makeExample('heroes-graphql/ts/app/in-memory-graphql.ts', 'execute-and-export', 'Execute and export')
+:marked
+  Now all that's left is to connect the new in-memory server into our Apollo Client configuration:
++makeExample('heroes-graphql/ts/app/client.ts', '', 'client.ts')
+:marked
+  That's it.  now you can run your application as if you had a GraphQL server connected to it but, 
+  there is no persistance - everything is running in-memory browser right now, so when you refresh the page, all changes will be lost.
 
+  more things you can do now that you have it setup:
+  * You can store everything on the browser's local-storage using local-storage database libraries
+  * You can make the resolver functions call your server's existing REST endpoint
+  * You can start a separate Node GraphQL server and simply move the code in there - 
+  now you will have persistance and you became a backend developer ;)
 
+.l-main-section
+<a id="example"></a>
+:marked
+  ## Full Example  
+
+block file-summary
+  +makeTabs(
+    `heroes-graphql/ts/app/app.component.ts,
+     heroes-graphql/ts/app/app.module.ts,
+     heroes-graphql/ts/app/heroes.component.ts,
+     heroes-graphql/ts/app/heroes.component.html,
+     heroes-graphql/ts/app/heroes.component.css,
+     heroes-graphql/ts/app/hero-detail.component.ts,
+     heroes-graphql/ts/app/hero-detail.component.html,
+     heroes-graphql/ts/app/in-memory-graphql.ts,
+     heroes-graphql/ts/app/client.ts`,
+    ',,,,,,,,',
+    `app.comp...ts,
+     app.mod...ts,
+     heroes.comp...ts,
+     heroes.comp...html,
+     heroes.comp...css,
+     hero-detail.comp...ts,
+     hero-detail.comp...html,
+     in-memory-graphql.ts,
+     client.ts`
+  )
+
+  +makeTabs(
+   `toh-6/ts/app/app-routing.module.ts,
+    toh-6/ts/app/hero-search.component.ts,
+    toh-6/ts/app/hero-search.component.html,
+    toh-6/ts/app/hero-search.component.css,
+    toh-6/ts/app/rxjs-extensions.ts`,
+    null,
+   `app-routing.modules.ts,
+    hero-search.component.ts,
+    hero-search.component.html,
+    hero-search.component.css,
+    rxjs-extensions.ts`
+  )
 
 :marked
   [Back to top](#top)

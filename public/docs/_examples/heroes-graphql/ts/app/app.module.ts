@@ -17,7 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 // #docregion import-apollo
 // ...
 import { ApolloModule } from 'apollo-angular';
-import { client } from './client';
+import { getClient } from './client';
 // ...
 // #enddocregion import-apollo
 
@@ -40,7 +40,7 @@ import { HeroSearchComponent }  from './hero-search.component';
     // #enddocregion v1
     // #docregion v1
     AppRoutingModule,
-    ApolloModule.withClient(client)
+    ApolloModule.withClient(getClient)
   ],
   // #docregion search
   declarations: [

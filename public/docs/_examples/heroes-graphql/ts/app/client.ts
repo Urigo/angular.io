@@ -6,7 +6,7 @@ const client = new ApolloClient({
   networkInterface,
   dataIdFromObject: (object: any) => object.id,
 });
-export {
-  client
+export function getClient(): ApolloClient {
+  return client;
 }
 // #enddocregion

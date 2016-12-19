@@ -1,5 +1,8 @@
 // #docregion , default-initialization
 import ApolloClient from 'apollo-client';
 
-export const client = new ApolloClient();
+const client = new ApolloClient();
+export function getClient(): ApolloClient {
+  return client;
+}
 // #enddocregion default-initialization

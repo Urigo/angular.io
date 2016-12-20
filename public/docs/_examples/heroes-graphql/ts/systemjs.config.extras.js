@@ -17,6 +17,7 @@ System.config({
 
     'deprecated-decorator':               'npm:deprecated-decorator',
     'node-uuid':                          'npm:node-uuid',
+    'uuid':                               'npm:uuid',
     'iterall':                            'npm:iterall',
 
     'lodash':                             'npm:lodash',
@@ -84,12 +85,26 @@ System.config({
     'graphql-tools':              { 
       main: '/dist/index.js', 
       defaultExtension: 'js',
-      map: { uuid: '@empty' } 
+      //map: { uuid: '@empty' }
     },
-    'graphql-anywhere':           { main: '/lib/src/index.js', defaultExtension: 'js' },
+    'graphql-anywhere':           { 
+      //format: 'cjs', 
+      main: '/lib/src/index.js', 
+      defaultExtension: 'js',
+    /*
+      map: {
+        './getFromAST': './getFromAST',
+        './directives': './directives',
+        './storeUtils': './storeUtils',
+        './utilities': './utilities'
+      }
+    */
+    },
+
 
     'deprecated-decorator':       { main: '/bld/index.js', defaultExtension: 'js' },
     'node-uuid':                  { main: './uuid.js', defaultExtension: 'js' },
+    'uuid':                       { main: './lib/rng-browser.js', defaultExtension: 'js' },
     'iterall':                    { main: './index.js', defaultExtension: 'js' },
     'symbol-observable':          { main: './index.js', defaultExtension: 'js' },
 

@@ -32,7 +32,8 @@ export default {
       ],
       namedExports: {
         'node_modules/graphql-tools/dist/index.js': ['makeExecutableSchema' ],
-        'node_modules/graphql/index.js': ['execute' ]
+        'node_modules/graphql/index.js': ['execute' ],
+        'node_modules/graphql-tag/printer.js': ['print']
       }
     }),
     globals(),

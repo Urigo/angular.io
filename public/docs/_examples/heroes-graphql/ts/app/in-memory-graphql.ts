@@ -1,6 +1,6 @@
 // #docregion
 // #docregion import-lodash
-import * as _ from 'lodash';
+import { find as lodashFind } from 'lodash';
 // #enddocregion import-lodash
 // #docregion import-graphql-tools
 import { makeExecutableSchema } from 'graphql-tools';
@@ -74,12 +74,12 @@ const resolveFunctions = {
       }
     },
     hero(obj: any, args: any, context: any) {
-      return _.find(heroes, { id: args.heroId });
+      return lodashFind(heroes, { id: args.heroId });
     }
   },
   Mutation: {
     updateHero(root: any, args: any) {
-      let hero = _.find(heroes, { id: args.id });
+      let hero = lodashFind(heroes, { id: args.id });
       if (!hero) {
         throw new Error(`Couldn't find post with id ${args.id}`);
       }
@@ -96,7 +96,7 @@ const resolveFunctions = {
       return newHero;
     },
     deleteHero(root: any, args: any) {
-      let hero = _.find(heroes, { id: args.id });
+      let hero = lodashFind(heroes, { id: args.id });
       if (!hero) {
         throw new Error(`Couldn't find post with id ${args.id}`);
       }

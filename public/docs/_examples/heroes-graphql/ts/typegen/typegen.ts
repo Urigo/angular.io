@@ -3,9 +3,9 @@ import { buildSchemaFromTypeDefinitions } from 'graphql-tools';
 import { FileResult, Transform, TransformedOptions, getTemplateGenerator } from 'graphql-code-generator';
 import * as fs from 'fs';
 
-import { typeDefinitions } from './app/graphql-typesdef';
+import { typeDefinitions } from '../app/graphql-typesdef';
 
-const OUT = "./app/graphql-types.d.ts";
+const OUT = "../app/graphql-types.d.ts";
 
 Promise.all([
   graphql(buildSchemaFromTypeDefinitions(typeDefinitions), introspectionQuery).then(res => res.data),

@@ -3,6 +3,7 @@ aot/**/*.ts
 **/*.ngsummary.json
 **/*.metadata.json
 **/*.js
+app/graphql-types.d.ts
 dist
 !app/tsconfig.json
 !rollup-config.js

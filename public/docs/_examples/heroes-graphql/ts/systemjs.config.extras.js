@@ -3,9 +3,9 @@
 System.config({
 
   map: {
-    'apollo-client':                      'npm:apollo-client',
-    'apollo-client-rxjs':                 'npm:apollo-client-rxjs',
-    'apollo-angular':                     'npm:apollo-angular',
+    'apollo-client':                      'npm:apollo-client/lib/bundles/apollo.umd.js',
+    'apollo-client-rxjs':                 'npm:apollo-client-rxjs/build/bundles/apollo-rxjs.umd.js',
+    'apollo-angular':                     'npm:apollo-angular/build/bundles/apollo.umd.js',
 
     'graphql':                            'npm:graphql',
     'whatwg-fetch':                       'npm:whatwg-fetch',
@@ -61,11 +61,6 @@ System.config({
     'lodash._basecopy':                   'npm:lodash._basecopy'
   },
   packages: {
-      
-    'apollo-client':              { main: './index.js', defaultExtension: 'js' },
-    'apollo-client-rxjs':         { main: './build/src/index.js', defaultExtension: 'js' },
-    'apollo-angular':             { main: './build/bundles/apollo.umd.js', defaultExtension: 'js' },
-
     'whatwg-fetch':               { main: './fetch.js', defaultExtension: 'js' },
     'redux':                      { format: 'cjs', defaultExtension: 'js' },
     'graphql-tag':                { main: './index.js', defaultExtension: 'js' },

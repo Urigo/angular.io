@@ -7,7 +7,14 @@ import { makeExecutableSchema } from 'graphql-tools';
 // #enddocregion import-graphql-tools
 // #docregion import-graphql
 import { GraphQLSchema, execute } from 'graphql';
-import { Hero } from './graphql-types';
+import {
+  Hero,
+  HeroQueryArgs,
+  HeroesQueryArgs,
+  UpdateHeroMutationArgs,
+  AddHeroMutationArgs,
+  DeleteHeroMutationArgs,
+} from './graphql-types';
 // #enddocregion import-graphql
 // #docregion graphql-schema
 import { typeDefinitions } from './graphql-typesdef';
@@ -30,7 +37,7 @@ let heroes = [
 // #docregion resolvers
 const resolveFunctions = {
   Query: {
-    heroes(obj: any, args: any): Hero[] {
+    heroes(obj: any, args: HeroesQueryArgs): Hero[] {
       if (args.search) {
         return heroes.filter(function (currentHero){
           return currentHero.name.toLowerCase().search(args.search.toLowerCase()) !== -1;
@@ -39,12 +46,12 @@ const resolveFunctions = {
         return heroes;
       }
     },
-    hero(obj: any, args: any, context: any): Hero {
+    hero(obj: any, args: HeroQueryArgs): Hero {
       return lodashFind(heroes, { id: args.heroId });
     }
   },
   Mutation: {
-    updateHero(root: any, args: any): Hero {
+    updateHero(root: any, args: UpdateHeroMutationArgs): Hero {
       let hero = lodashFind(heroes, { id: args.id });
       if (!hero) {
         throw new Error(`Couldn't find post with id ${args.id}`);
@@ -52,7 +59,7 @@ const resolveFunctions = {
       hero.name = args.name;
       return hero;
     },
-    addHero(root: any, args: any): Hero {
+    addHero(root: any, args: AddHeroMutationArgs): Hero {
       const maxId = Math.max(...heroes.map((hero) => {return hero.id; }));
       const newHero = {
         name: args.heroName,
@@ -61,7 +68,7 @@ const resolveFunctions = {
       heroes.push(newHero);
       return newHero;
     },
-    deleteHero(root: any, args: any): Hero {
+    deleteHero(root: any, args: DeleteHeroMutationArgs): Hero {
       let hero = lodashFind(heroes, { id: args.id });
       if (!hero) {
         throw new Error(`Couldn't find post with id ${args.id}`);
